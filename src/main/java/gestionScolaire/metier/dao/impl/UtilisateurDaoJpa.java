@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,7 +61,7 @@ public class UtilisateurDaoJpa implements UtilisateurDao {
 		em.persist(utilisateur);
 	}
 
-	// un objet r�cup�r� de la base est d�j� manag� donc les modif se font
+	// un objet recupere de la base est deja manage donc les modif se font
 	// automatiquement pas besoin d'update
 	// on utilise update pour merger objet
 	@Override
@@ -78,5 +79,18 @@ public class UtilisateurDaoJpa implements UtilisateurDao {
 		Utilisateur utilisateur = find(id);
 		em.remove(em.merge(utilisateur));
 	}	
+	
+	@Override
+	public Utilisateur userConnecter(String userId, String password) {
+		
+		TypedQuery<Utilisateur> query=em.createQuery(
+				"select u from Utilisateur as u where u.login= :login and u.motDePasseTemporaire= :motDePasseTemporaire", Utilisateur.class);
+		query.setParameter("login", userId);
+		query.setParameter("motDePasseTemporaire", password);
+		List<Utilisateur> list=query.getResultList();
+		if(list.size()==0)
+		{return null;}
+		else return list.get(0);
+	}
 }
 

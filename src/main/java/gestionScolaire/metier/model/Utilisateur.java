@@ -98,7 +98,7 @@ public class Utilisateur {
 	}
 
 
-	public boolean isPremConnect() {
+	public boolean getPremConnect() {
 		return premConnect;
 	}
 
